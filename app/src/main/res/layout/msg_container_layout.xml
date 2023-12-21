@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#747070"
+        android:layout_alignParentStart="true"
+        app:cardCornerRadius="30dp"
+        android:layout_marginBottom="3dp">
+
+        <TextView
+            android:id="@+id/receiver_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="casual"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:text="receiver msg"
+            android:textColor="@color/white"
+            android:textSize="25dp"  />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sender"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginStart="70dp"
+        app:cardBackgroundColor="#34DF3C"
+        app:cardCornerRadius="35dp"
+        android:foregroundGravity="center"
+        android:layout_marginBottom="3dp"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/sender_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="casual"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:text="sender msg"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>
