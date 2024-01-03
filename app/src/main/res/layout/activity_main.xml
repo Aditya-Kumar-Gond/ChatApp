@@ -40,7 +40,7 @@
                     android:textSize="13dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
-                    android:fontFamily="casual"
+                    android:fontFamily="@font/noto_sans"
                     android:textColor="#71E20E"/>
             </LinearLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -85,7 +85,7 @@
                     android:inputType="text"
                     android:textColorHint="#7D7A7A"
                     android:textColor="@color/black"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/noto_sans"
                     android:hint=" Type message"/>
 
                 <ImageView
