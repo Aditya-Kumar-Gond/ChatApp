@@ -2,7 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#DFD1C3"
+    android:background="@drawable/bgforchat"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:orientation="vertical"
-                android:background="@color/btn_send_clr"
+                android:background="@drawable/toolbar_bg"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,8 +50,7 @@
             android:id="@+id/scrollChat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#DFD1C3">
+            android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_view"
@@ -61,7 +60,6 @@
 
         <LinearLayout
             android:layout_marginBottom="10dp"
-            android:background="#DFD1C3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -69,6 +67,7 @@
                 app:cardBackgroundColor="@color/white"
                 android:background="#DFD1C3"
                 app:cardCornerRadius="25dp"
+                android:outlineAmbientShadowColor="@color/white"
                 android:layout_weight="3"
                 android:layout_width="match_parent"
                 android:layout_height="50dp">
@@ -80,13 +79,13 @@
                     android:id="@+id/msg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
+                    android:layout_marginStart="10dp"
                     android:drawableStart="@drawable/keyboard"
                     android:layout_weight="1"
                     android:inputType="text"
                     android:textColorHint="#7D7A7A"
                     android:textColor="@color/black"
-                    android:fontFamily="casual"
+                    android:fontFamily="sans-serif"
                     android:hint=" Type message"/>
 
                 <ImageView
@@ -102,25 +101,26 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="70dp"
                 android:background="@color/white"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@color/btn_send_clr"
                 android:theme="@style/CardView.Light"
                 android:layout_weight="1"
                 android:clickable="true"
+                android:outlineAmbientShadowColor="@color/white"
                 app:cardCornerRadius="30dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="3dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
                 android:layout_height="match_parent"
                 >
+
                 <ImageView
-                    android:layout_gravity="center"
                     android:id="@+id/send_btn"
                     android:layout_width="30dp"
-                    android:background="@color/white"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginStart="3dp"
                     android:clickable="true"
-                    android:layout_height="match_parent"
                     android:src="@drawable/send_btn"
-                    app:tint="#1976D2" />
+                    app:tint="@color/white" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </LinearLayout>

@@ -5,35 +5,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
+
     <TextView
         android:id="@+id/receiver_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif"
         android:layout_alignParentStart="true"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/recieve_chat_bg"
+        android:fontFamily="@font/noto_sans"
+        android:foregroundGravity="center"
+        android:gravity="center"
         android:inputType="textMultiLine"
         android:padding="10dp"
-        android:background="@drawable/recieve_chat_bg"
         android:text="receiver msg"
         android:textColor="@color/white"
-        android:textSize="25dp"  />
-
+        android:textSize="17dp" />
 
     <TextView
         android:id="@+id/sender_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/send_chat_bg"
         android:layout_marginStart="70dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/send_chat_bg"
+        android:fontFamily="@font/noto_sans"
         android:inputType="textMultiLine"
         android:padding="10dp"
         android:text="sender msg"
         android:textColor="@color/white"
-        android:textSize="25dp" />
+        android:textSize="17dp" />
 
 
 </RelativeLayout>
