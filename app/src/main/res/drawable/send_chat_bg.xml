@@ -7,7 +7,7 @@
         android:bottomRightRadius="35dp"/>
 
     <stroke android:width="4dp"
-        android:color="@color/black"/>
+        android:color="#052B49"/>
 
     <gradient android:startColor="@color/btn_send_clr"
         android:endColor="#5198DF"/>

@@ -19,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
@@ -34,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
     ImageView send,attach;
     RecyclerView rv;
     NestedScrollView scrollView;
-    ArrayList<String> arrayData = new ArrayList<>();
+    ArrayList<JSONObject> arrayData = new ArrayList<>();
+    WebSocket webSocket;
+    JSONObject object;
 
 
     @Override
@@ -50,15 +55,39 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
         rv.setLayoutManager(manager);
 
+        runSocket();
+
+        MessageAdapter adapter = new MessageAdapter();
+        rv.setAdapter(adapter);
+
         send.setOnClickListener(view -> {
             if(!(message.getText().length() ==0)){
-                String msg = message.getText().toString();
-                Toast.makeText(MainActivity.this, message.getText(), Toast.LENGTH_SHORT).show();
-                arrayData.add(msg);
+                String msgContent = message.getText().toString();
+                webSocket.send(msgContent);
+
+                object = new JSONObject();
+               // Toast.makeText(MainActivity.this, message.getText(), Toast.LENGTH_SHORT).show();
+                try {
+                    object.put("Message",msgContent);
+                    object.put("byServer",false);
+                    arrayData.add(object);
+                    MessageAdapter adapter1 = new MessageAdapter();
+                    rv.setAdapter(adapter1);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
                 Log.i("Array Log", "Array:"+arrayData);
-                MessageAdapter adapter = new MessageAdapter(arrayData);
-                rv.setAdapter(adapter);
-                scrollView.scrollTo(arrayData.size(),arrayData.size());
+
+
+                //This will show latest type/received message at end of recyclerView
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+                rv.smoothScrollToPosition(adapter.getItemCount()-1);
             }else{
                 message.setError("Empty");
                // Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
@@ -68,50 +97,62 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void runSocket(){
+        Log.i("in socket", "runSocket: working");
         OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().url("").build();
+        Request request = new Request.Builder().url("ws://192.168.177.168:8080").build();
 
-        WebSocket webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {
-            @Override
-            public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-                Toast.makeText(MainActivity.this, "Connection closed", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-                super.onClosing(webSocket, code, reason);
-            }
-
+        webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, @Nullable Response response) {
-                Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                Log.e("WebSocket Failure", "Error: " + t.getMessage());
+                super.onFailure(webSocket, t, response);
             }
+
 
             @Override
             public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
+                Log.i("WebSocket", "onMessage: Message received - " + text);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                         object = new JSONObject();
+                        try {
+                            object.put("Message",text);
+                            object.put("byServer",true);
+                            arrayData.add(object);
+                            MessageAdapter adapter1 = new MessageAdapter();
+                            rv.setAdapter(adapter1);
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(MainActivity.this, "Problem with parsing json object", Toast.LENGTH_SHORT).show();
+                            Log.e("Error", "problem occurred during parsing object");
+                        }
+                    }
+                });
                 super.onMessage(webSocket, text);
             }
 
             @Override
-            public void onMessage(@NonNull WebSocket webSocket, @NonNull ByteString bytes) {
-                super.onMessage(webSocket, bytes);
+            public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
+                Log.i("WebSocket", "onOpen: Connection opened");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("Websocket connection", "run: connected");
+                        Toast.makeText(MainActivity.this, "connection made", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                super.onOpen(webSocket, response);
             }
 
             @Override
-            public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
-                Toast.makeText(MainActivity.this, "Connection made:"+response, Toast.LENGTH_SHORT).show();
+            public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
+                super.onClosed(webSocket, code, reason);
             }
         });
-
     }
 
     class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder>{
-        ArrayList<String> data = new ArrayList<>();
-
-        public MessageAdapter(ArrayList<String> data){
-            this.data = data;
-        }
-
 
         @NonNull
         @Override
@@ -122,21 +163,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder holder, int position) {
-
-                if(position%2 ==0){
+            JSONObject object1 = arrayData.get(position);
+            try {
+                Boolean byServer = object1.getBoolean("byServer");
+                if(byServer){
                     holder.sender.setVisibility(View.GONE);
                     holder.receiver.setVisibility(View.VISIBLE);
-                    holder.receiver.setText(data.get(position));
+                    holder.receiver.setText(object1.get("Message").toString());
                 }else {
-                    holder.sender.setVisibility(View.VISIBLE);
                     holder.receiver.setVisibility(View.GONE);
-                    holder.sender.setText(data.get(position));
+                    holder.sender.setVisibility(View.VISIBLE);
+                    holder.sender.setText(object1.get("Message").toString());
                 }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return data.size();
+            return arrayData.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

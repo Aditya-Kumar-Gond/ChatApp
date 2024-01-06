@@ -3,5 +3,5 @@
 
     <gradient
         android:startColor="@color/btn_send_clr"
-        android:endColor="#A37DC8"/>
+        android:endColor="#6E2EAD"/>
 </shape>
