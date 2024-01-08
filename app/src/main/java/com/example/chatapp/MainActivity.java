@@ -1,5 +1,7 @@
 package com.example.chatapp;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,15 +100,27 @@ public class MainActivity extends AppCompatActivity {
     }
     void runSocket(){
         Log.i("in socket", "runSocket: working");
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, SECONDS) // Adjust the timeout as needed
+                .build();
+
         Request request = new Request.Builder().url("ws://192.168.177.168:8080").build();
 
         webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {
+
             @Override
             public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, @Nullable Response response) {
                 Log.e("WebSocket Failure", "Error: " + t.getMessage());
+
+                if (response != null) {
+                    Log.e("WebSocket Failure", "Response: " + response.toString());
+                }
+
+                t.printStackTrace(); // Print the stack trace for detailed error information
+
                 super.onFailure(webSocket, t, response);
             }
+
 
 
             @Override
